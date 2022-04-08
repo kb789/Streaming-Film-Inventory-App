@@ -1,6 +1,6 @@
 exports.fieldValidator = (fields) => {
-  const { name, director, price, availability, category } = fields;
-  if (!name || !director || !price || !availability || !category) {
+  const { name, director, price, availability, category, film_id } = fields;
+  if (!name || !director || !price || !availability || !category || !film_id) {
     const emptyFields = [];
     Object.keys(fields).forEach((field) => {
       if (fields[field].length <= 0) {

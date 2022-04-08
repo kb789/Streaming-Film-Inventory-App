@@ -2,6 +2,7 @@ const async = require("async");
 const formidable = require("formidable");
 const path = require("path");
 var fs = require("fs");
+const mongoose = require("mongoose");
 
 const Category = require("../models/category");
 var Film = require("../models/film");
@@ -190,62 +191,32 @@ exports.editForm = (req, res) => {
         error: err,
       });
     }
-    const { name, director, price, availability, category } = fields;
+    const { name, director, price, availability, category, film_id } = fields;
     if (fieldValidator(fields)) {
       return res.status(400).json(fieldValidator(fields));
     }
     // check if file is null
     const file = await files.myFile;
 
-    if (file.size === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "no file uploaded",
-      });
-    }
-
-    if (
-      file.mimetype !== "image/jpeg" &&
-      file.mimetype !== "image/gif" &&
-      file.mimetype !== "image/png"
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid file type. Please upload a jpeg, gif or png file",
-      });
-    }
-
-    var fileNameFinal =
-      new Date().getTime().toString() + "-" + file.originalFilename;
-    var oldPath = file._writeStream.path;
-    var newPath = "./public/files" + "/" + fileNameFinal;
-    var rawData = fs.readFileSync(oldPath);
-
-    fs.writeFile(newPath, rawData, function (err) {
-      if (err) {
+    if (file.size !== 0) {
+      if (
+        file.mimetype !== "image/jpeg" &&
+        file.mimetype !== "image/gif" &&
+        file.mimetype !== "image/png"
+      ) {
         return res.status(400).json({
           success: false,
-          error: err,
+          message: "Invalid file type. Please upload a jpeg, gif or png file",
         });
       }
-    });
-    const fullpath = `files/${fileNameFinal}`;
 
-    const filter = {
-      _id: req.params.id,
-    };
+      var fileNameFinal =
+        new Date().getTime().toString() + "-" + file.originalFilename;
+      var oldPath = file._writeStream.path;
+      var newPath = "./public/files" + "/" + fileNameFinal;
+      var rawData = fs.readFileSync(oldPath);
 
-    const update = {
-      name: name,
-      director: director,
-      price: price,
-      availability: availability,
-      category: category,
-      image: fullpath,
-    };
-
-    try {
-      await Film.findOneAndUpdate(filter, update, function (err, result) {
+      fs.writeFile(newPath, rawData, function (err) {
         if (err) {
           return res.status(400).json({
             success: false,
@@ -253,13 +224,37 @@ exports.editForm = (req, res) => {
           });
         }
       });
-    } catch (error) {
-      return res.status(400).json({
-        error,
-      });
+      fullpath = `files/${fileNameFinal}`;
+      update = {
+        name: name,
+        director: director,
+        price: price,
+        availability: availability,
+        category: category,
+        image: fullpath,
+      };
+    } else {
+      update = {
+        name: name,
+        director: director,
+        price: price,
+        availability: availability,
+        category: category,
+      };
     }
-    res.redirect("/film/" + film._id);
-    //res.render("pages/index");
+
+    const filter = {
+      // _id: mongoose.Types.ObjectId(film_id),
+      _id: film_id,
+    };
+
+    Film.findOneAndUpdate(filter, update, null, function (err, result) {
+      if (err) {
+        return err;
+      }
+    });
+    res.redirect("/film/" + film_id);
+   
   });
 };
 

@@ -9,7 +9,7 @@
     <main>
         <div class="container">
             <div class="w-75 mx-auto pt-3">
-                <form action="/film/create" enctype="multipart/form-data" method="POST">
+                <form action="/film/:id/edit" enctype="multipart/form-data" method="POST">
                     <div class="row mb-4 mt-4">
                         <label for="name" class="col-sm-2 col-form-label">Film Name</label>
                         <div class="col-sm-10">
@@ -70,6 +70,7 @@
                         <input type="file" id="myFile" name="myFile" class="form-control-sm offset-sm-2">
                                     
                     </div>
+                    <input type="hidden" id="film_id" name="film_id" value="<%= film._id %>">
                     <img src="<%= image %>" />
                     <p><%= film.image %></p>
 
