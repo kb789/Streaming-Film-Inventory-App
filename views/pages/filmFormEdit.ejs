@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body class="container">
+    <header><%- include('../partials/header'); %></header>
+
+    <main>
+        <div class="container">
+            <div class="w-75 mx-auto pt-3">
+                <form action="/film/create" enctype="multipart/form-data" method="POST">
+                    <div class="row mb-4 mt-4">
+                        <label for="name" class="col-sm-2 col-form-label">Film Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Film Name" value="<%= film.name %>"> 
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <label for="director" class="col-sm-2 col-form-label">Film Director</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="director" name="director" placeholder="Film Director" value="<%= film.director %>"> 
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <label for="price" class="col-sm-2 col-form-label">Price</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="price" name="price" placeholder="Price" value="<%= film.price %>" >
+                        </div>
+                    </div>
+                
+                    
+                    <div class="form-group">
+                        <div class="row mb-4">
+                        <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Availability</label>
+                        <div class="col-sm-10">
+                        <select class="form-control" id="availability" name="availability">
+                             
+                          <%
+                          var options = [ "Available", "Expiring Soon", "Coming Soon", "Unavailable" ];
+                          for ( var i = 0; i < options.length; i++ )
+                          {
+                          var selected = ( film.availability == options[i] ) ? "selected" : "";
+                                %><option value="<%=options[ i ] %>" <%=selected %>><%=options[i] %></option><%
+                          }
+                           %>
+
+                        </select>
+                        </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="row mb-4">
+                        <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Category</label>
+                        <div class="col-sm-10">
+                        <select class="form-control" id="category._id" name="category">
+                         
+                          <% categories.forEach(function(category) { 
+                           var selected = ( category._id.toString() === film.category[0].toString() ) ? " selected" : ""  %>
+                          
+                            <option value="<%= category._id %>"<%= selected %>> <%= category.name %> </option>
+                          <% }); %>
+                        </select>
+                        </div>
+                        </div>
+                      </div>
+                      <div class>
+                      <div class="input-group">
+                       
+                        <input type="file" id="myFile" name="myFile" class="form-control-sm offset-sm-2">
+                                    
+                    </div>
+                    <img src="<%= image %>" />
+                    <p><%= film.image %></p>
+
+                    </div>
+
+                      <div class="row mt-4 pt-2">
+                        <div class="col-sm-10 ">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
+      </div>
+      </div>
+    </main>
+    </body>
+    </html>
+    <footer><%- include('../partials/footer'); %></footer>
+  </body>
+</html>

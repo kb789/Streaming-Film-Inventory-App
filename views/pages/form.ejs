@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body class="container">
+    <header><%- include('../partials/header'); %></header>
+
+    <main>
+        <div class="container">
+            <div class="w-75 mx-auto pt-3">
+                <form action="/category/create" method="POST">
+                    <div class="row mb-4 mt-4">
+                        <label for="name" class="col-sm-2 col-form-label">Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Category Name">
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <label for="description" class="col-sm-2 col-form-label">Description</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="description" name="description" placeholder="Category Description">
+                        </div>
+                    </div>
+                    
+                      <div class="row mt-4 pt-2">
+                        <div class="col-sm-10 ">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
+      </div>
+      </div>
+    </main>
+    </body>
+    </html>
+    <footer><%- include('../partials/footer'); %></footer>
+  </body>
+</html>
