@@ -7,14 +7,22 @@
     <header><%- include('../partials/header'); %></header>
 
     <main>
-      <div class="jumbotron">
-        <h1>Category Detail</h1>
-
-        <h2><%= name %></h2>
-        <p><%= desc %></p>
+      <br />
+      <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+          <h2 class="text-center"><%= name %></h2>
+          <br />
+          <p><%= desc %></p>
+          <br />
+          <div class="d-flex justify-content-center">
+            <button class="btn btn-primary">View All <%= name %> Films</button>
+          </div>
+        </div>
+        <div class="col-sm-2"></div>
       </div>
     </main>
-
+    <br />
     <footer><%- include('../partials/footer'); %></footer>
   </body>
 </html>

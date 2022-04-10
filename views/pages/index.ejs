@@ -8,9 +8,57 @@
 
     <main>
       <div class="jumbotron">
-        <img src="<%= result.image %>" />
-        <p><%= result.director %>'s <%= result.name %></p>
-        <a href="<%= result.url %>"> Learn more</a>
+        <h1>Movie Manager</h1>
+        <p>Welcome to Movie Manager, a film inventory management system.</p>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-8">
+         
+          <div class="form-outline">
+            <input type="search" id="form1" class="form-control" />
+            
+          </div>
+            <button type="button" class="btn btn-primary mt-3 mb-5"> 
+             Search title
+            </button>
+           
+            <div class="card-deck mt-5">
+              <div class="card pt-4 pb-4">
+                <div class="card-body text-center">
+                  <p class="card-text"><a href="/film/create" class="stretched-link">Add New Film</a></p>
+                </div>
+              </div>
+              
+              <div class="card pt-4 pb-4">
+                <div class="card-body text-center">
+                  <p class="card-text"><a href="/category/create" class="stretched-link">Add New Genre</a></p>
+                  
+              </div>
+          </div>
+         
+          
+        </div>
+            
+        </div>
+        
+        <div class="col-sm-4">
+          
+          <div class="card float-right" style="width: 18rem">
+            <img
+              class="card-img-top"
+              src="<%= result.image %>"
+              alt="Card image"
+            />
+            <div class="card-body">
+              <h4 class="card-title">Featured Film</h4>
+              <p class="card-text">
+                <%= result.director %>'s <%= result.name %>
+              </p>
+              <a href="<%= result.url %>" class="btn btn-primary">Learn More</a>
+            </div>
+    
+      </div>
       </div>
     </main>
 
