@@ -1,0 +1,31 @@
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body class="container">
+    <header><%- include('../partials/header'); %></header>
+
+    <main>
+      
+        <div class="table-responsive">
+                <table class="table table-striped"">
+                       
+                                <% cat_films.forEach(function(film) { %>
+                                        <tr>
+                                  <td>
+                                    <a href=  "<%= film.url %>" > <%= film.name %></a>      
+                                  </td>
+                                  <td> <%= film.director %>  </td>
+                                  <td> <%= film.availability %>  </td>
+                                </tr>
+                                <% }); %>
+                              
+                </table>
+              
+       
+      </div>
+    </main>
+
+    <footer><%- include('../partials/footer'); %></footer>
+  </body>
+</html>

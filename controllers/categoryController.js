@@ -40,6 +40,7 @@ exports.categoryDetail = function (req, res) {
       res.render("pages/category_detail", {
         name: docs[0].name,
         desc: docs[0].description,
+        id: docs[0]._id,
       });
     });
 };

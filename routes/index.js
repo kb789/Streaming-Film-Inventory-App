@@ -57,6 +57,12 @@ router.post("/film/:id/edit", film_controller.editForm);
 // POST request to delete BookInstance.
 router.post("/film/:id/delete", film_controller.delete_film);
 
+// GET request to find film by genre.
+router.get("/film/category/:id", film_controller.filmCategory);
+
+// POST request to edit one FilmInstance.
+router.post("/films/search/", film_controller.searchFilms);
+
 // GET request for list of all film items.
 router.get("/films", film_controller.film_list);
 

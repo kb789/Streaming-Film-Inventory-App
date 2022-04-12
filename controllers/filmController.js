@@ -3,6 +3,7 @@ const formidable = require("formidable");
 const path = require("path");
 var fs = require("fs");
 const mongoose = require("mongoose");
+var ObjectId = require("mongodb").ObjectID;
 
 const Category = require("../models/category");
 var Film = require("../models/film");
@@ -18,7 +19,7 @@ exports.index = function (req, res) {
       .skip(random)
       .exec(function (err, result) {
         // Tada! random user
-        console.log(result);
+
         res.render("pages/index", { result: result });
       });
   });
@@ -54,8 +55,6 @@ exports.create = (req, res) => {
   form.keepExtensions = true;
 
   form.parse(req, async (err, fields, files) => {
-    console.log(fields);
-    console.log(files);
     if (err) {
       return res.status(400).json({
         status: "Fail",
@@ -137,7 +136,6 @@ exports.filmDetail = function (req, res, next) {
   const promise = Film.find({ _id: req.params.id }).exec();
 
   promise.then(function (docs) {
-    console.log(docs.category);
     Category.find({ _id: docs[0].category.toString() }).exec(function (
       err,
       cats
@@ -160,13 +158,11 @@ exports.filmEditForm = function (req, res, next) {
   const promise = Film.find({ _id: req.params.id }).exec();
 
   promise.then(function (docs) {
-    console.log(docs.category);
     Category.find().exec(function (err, cats) {
       if (err) {
         return next(err);
       }
-      console.log(cats[0]._id);
-      console.log(docs[0].category[0]);
+
       res.render("pages/filmFormEdit", {
         film: docs[0],
         categories: cats,
@@ -182,8 +178,6 @@ exports.editForm = (req, res) => {
   form.keepExtensions = true;
 
   form.parse(req, async (err, fields, files) => {
-    console.log(fields);
-    console.log(files);
     if (err) {
       return res.status(400).json({
         status: "Fail",
@@ -254,7 +248,6 @@ exports.editForm = (req, res) => {
       }
     });
     res.redirect("/film/" + film_id);
-   
   });
 };
 
@@ -269,7 +262,37 @@ exports.delete_film = function (req, res, next) {
   res.redirect("/films");
 };
 
-// GET request for list of all category items.
+exports.filmCategory = function (req, res, next) {
+  Film.find({ category: [new ObjectId(req.params.id)] }).exec(function (
+    err,
+    cat_films
+  ) {
+    if (err) {
+      return next(err);
+    }
+
+    res.render("pages/catfilm", {
+      cat_films: cat_films,
+    });
+  });
+};
+
+// GET request for list of all film items.
+
+exports.searchFilms = function (req, res, next) {
+  Film.find({ name: { $regex: req.body.term, $options: "i" } }).exec(function (
+    err,
+    result
+  ) {
+    if (err) {
+      return next(err);
+    }
+
+    res.render("pages/film_list", {
+      film_list: result,
+    });
+  });
+};
 
 exports.film_list = function (req, res, next) {
   Film.find({}, "name director availability")
