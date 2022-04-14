@@ -17,22 +17,41 @@
           <p><%= film.availability %></p>
           <p><%= category %></p>
           <br />
-          <form action="/film/<%= film._id %>/edit">
-            <input type="submit" value="Edit" />
-          </form>
-          <form action="/film/<%= film._id %>/delete" method="post">
-            <button name="delete" value="delete">Delete</button>
-          </form>
+          <div class="row">
+            <div class="col-lg-4">
+              <form action="/film/<%= film._id %>/edit">
+                <input
+                  type="submit"
+                  class="button btn-block"
+                  value="Edit"
+                  style="background: #9e48a9; color: #fff"
+                />
+              </form>
+            </div>
+            <div class="col-lg-4">
+              <form action="/film/<%= film._id %>/delete" method="post">
+                <button
+                  name="delete"
+                  value="delete"
+                  class="button btn-block"
+                  style="background: #9e48a9; color: #fff"
+                >
+                  Delete
+                </button>
+              </form>
+            </div>
+          </div>
           <hr />
-
-          <img
-            class="w-100 h-100"
-            src="<%= image %>"
-            style="max-width: 300px; max-height: 400px"
-            alt="Card image"
-          />
+          <div class="text-center text-sm-left">
+            <img
+              class="w-100 h-100 pb-1 pb-sm-5 pb-md-1"
+              src="<%= image %>"
+              style="max-width: 300px; max-height: 400px"
+              alt="Card image"
+            />
+          </div>
         </div>
-        <div class="col-sm-4"></div>
+        <div class="col-lg-4"></div>
       </div>
     </main>
 

@@ -13,38 +13,46 @@
       </div>
 
       <div class="row">
-        <div class="col-sm-8">
+        <div class="col-lg-8">
           <form action="/films/search" method="POST">
           <div class="form-outline">
             <input type="text" id="term" name="term" class="form-control" />
             
           </div>
-            <button type="submit" class="btn btn-primary mt-3 mb-5"> 
+            <button type="submit" class="btn mt-3 mb-5" style="background: #9e48a9; color: #fff;"> 
              Search title
             </button>
            </form>
             <div class="card-deck mt-5">
-              <div class="card pt-4 pb-4">
-                <div class="card-body text-center">
-                  <p class="card-text"><a href="/film/create" class="stretched-link">Add New Film</a></p>
-                </div>
+             
+              <div class="card addedit">
+                <img class="card-img"
+                 src="/images/design.jpg" alt="a snow-capped mountain range"/>
+                <div class="card-img-overlay d-flex">
+                <div class="card-body d-flex align-items-center justify-content-center w-100">
+                  
+                  <a href="/film/create" class="align-self-center mx-auto stretched-link text-white h2" style="text-decoration: none"; >Add New Film</a>
+                  </div>
+              </div>
               </div>
               
-              <div class="card pt-4 pb-4">
-                <div class="card-body text-center">
-                  <p class="card-text"><a href="/category/create" class="stretched-link">Add New Genre</a></p>
+              <div class="card addedit">
+                <img class="card-img" src="/images/design.jpg" alt="a snow-capped mountain range"/>
+                <div class="card-img-overlay d-flex">
+                  <div class="card-body d-flex align-items-center justify-content-center">
+                  ><a href="/category/create" class="align-self-center mx-auto stretched-link text-white h2" style="text-decoration: none"; >Add New Genre</a>
                   
               </div>
           </div>
-         
+        </div>
           
         </div>
             
         </div>
         
-        <div class="col-sm-4">
+        <div class="col-lg-4 mt-lg-0 mt-sm-3 mt-0">
           
-          <div class="card float-right" style="width: 18rem">
+          <div class="card float-lg-right mx-auto" style="width: 18rem">
             <img
               class="card-img-top"
               src="<%= result.image %>"
@@ -55,7 +63,7 @@
               <p class="card-text">
                 <%= result.director %>'s <%= result.name %>
               </p>
-              <a href="<%= result.url %>" class="btn btn-primary">Learn More</a>
+              <a href="<%= result.url %>" class="btn btn-primary" style="background: #9e48a9; color: #fff;">Learn More</a>
             </div>
     
       </div>
