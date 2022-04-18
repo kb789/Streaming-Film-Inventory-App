@@ -18,7 +18,12 @@ exports.index = function (req, res) {
     Film.findOne()
       .skip(random)
       .exec(function (err, result) {
-        // Tada! random user
+        if (err) {
+          return res.status(400).json({
+            success: false,
+            error: err,
+          });
+        }
 
         res.render("pages/index", { result: result });
       });
@@ -120,19 +125,36 @@ exports.create = (req, res) => {
             error: err,
           });
         }
+        Film.find({}, "name director availability")
+          .sort({ name: 1 })
+          .exec(function (err, list_films) {
+            if (err) {
+              return res.status(400).json({
+                success: false,
+                error: err,
+              });
+            }
+            //Successful, so render
+            res.render("pages/film_list", {
+              film_list: list_films,
+            });
+          });
       });
     } catch (error) {
       return res.status(400).json({
         error,
       });
     }
-    res.redirect("/film/" + film._id);
-    //res.render("pages/about");
+
+    //res.render("pages/film_detail", {
+    //  film: docs,
+    //  categories: results.categories,
+    //});
   });
 };
 
 // Get Film detail page
-exports.filmDetail = function (req, res, next) {
+exports.filmDetail = function (req, res) {
   const promise = Film.find({ _id: req.params.id }).exec();
 
   promise.then(function (docs) {
@@ -141,7 +163,10 @@ exports.filmDetail = function (req, res, next) {
       cats
     ) {
       if (err) {
-        return next(err);
+        return res.status(400).json({
+          success: false,
+          error: err,
+        });
       }
 
       res.render("pages/film_detail", {
@@ -154,13 +179,16 @@ exports.filmDetail = function (req, res, next) {
   });
 };
 
-exports.filmEditForm = function (req, res, next) {
+exports.filmEditForm = function (req, res) {
   const promise = Film.find({ _id: req.params.id }).exec();
 
   promise.then(function (docs) {
     Category.find().exec(function (err, cats) {
       if (err) {
-        return next(err);
+        return res.status(400).json({
+          success: false,
+          error: err,
+        });
       }
 
       res.render("pages/filmFormEdit", {
@@ -251,24 +279,28 @@ exports.editForm = (req, res) => {
   });
 };
 
-exports.delete_film = function (req, res, next) {
-  const del_film_promise = Film.findByIdAndRemove(req.params.id).exec();
-
-  del_film_promise.then(function (err) {
+exports.delete_film = function (req, res) {
+  Film.findByIdAndRemove(req.params.id, function (err, results) {
     if (err) {
-      return next(err);
+      return res.status(400).json({
+        success: false,
+        error: err,
+      });
     }
+    return res.redirect("/films");
   });
-  res.redirect("/films");
 };
 
-exports.filmCategory = function (req, res, next) {
+exports.filmCategory = function (req, res) {
   Film.find({ category: [new ObjectId(req.params.id)] }).exec(function (
     err,
     cat_films
   ) {
     if (err) {
-      return next(err);
+      return res.status(400).json({
+        success: false,
+        error: err,
+      });
     }
 
     res.render("pages/catfilm", {
@@ -279,13 +311,18 @@ exports.filmCategory = function (req, res, next) {
 
 // GET request for list of all film items.
 
-exports.searchFilms = function (req, res, next) {
+exports.searchFilms = function (req, res) {
+  // break down req.body.term into array, search each word, skip a, and, the, , weight by most results?
+  //keyword search with mongoose
   Film.find({ name: { $regex: req.body.term, $options: "i" } }).exec(function (
     err,
     result
   ) {
     if (err) {
-      return next(err);
+      return res.status(400).json({
+        success: false,
+        error: err,
+      });
     }
 
     res.render("pages/film_list", {
@@ -294,12 +331,15 @@ exports.searchFilms = function (req, res, next) {
   });
 };
 
-exports.film_list = function (req, res, next) {
+exports.film_list = function (req, res) {
   Film.find({}, "name director availability")
     .sort({ name: 1 })
     .exec(function (err, list_films) {
       if (err) {
-        return next(err);
+        return res.status(400).json({
+          success: false,
+          error: err,
+        });
       }
       //Successful, so render
       res.render("pages/film_list", {

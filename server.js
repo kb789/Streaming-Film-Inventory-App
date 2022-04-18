@@ -27,13 +27,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 
-//app.use(function (err, req, res, next) {
-//  if (err instanceof ValidationError) {
-//    return res.status(err.statusCode).send(err.statusCode);
-//  }
-
-//return res.status(500).send(err);
-//});
+app.use((req, res, next) => {
+  res.status(404).send("<h1>Page not found on the server</h1>");
+});
 
 app.listen(3000);
 console.log("Server is listening on port 3000");

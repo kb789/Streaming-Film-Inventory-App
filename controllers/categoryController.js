@@ -52,7 +52,10 @@ exports.category_list = function (req, res, next) {
     .sort({ name: 1 })
     .exec(function (err, list_categories) {
       if (err) {
-        return next(err);
+        return res.status(400).json({
+          success: false,
+          error: err,
+        });
       }
       //Successful, so render
       res.render("pages/category_list", {
