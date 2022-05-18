@@ -312,8 +312,9 @@ exports.filmCategory = function (req, res) {
 // GET request for list of all film items.
 
 exports.searchFilms = function (req, res) {
-  // break down req.body.term into array, search each word, skip a, and, the, , weight by most results?
+  // break down req.body.term into array, search each word, skip a, and, the,  weight by most results?
   //keyword search with mongoose
+
   Film.find({ name: { $regex: req.body.term, $options: "i" } }).exec(function (
     err,
     result
@@ -324,11 +325,36 @@ exports.searchFilms = function (req, res) {
         error: err,
       });
     }
-
-    res.render("pages/film_list", {
-      film_list: result,
-    });
+    if (result.length !== 0) {
+      console.log(result);
+      return res.render("pages/film_list", {
+        film_list: result,
+      });
+    }
   });
+  let term_arr = req.body.term.split(" ");
+  for (let i = 0; i < term_arr.length; i++) {
+    Film.find({ name: { $regex: term_arr[i], $options: "i" } }).exec(function (
+      err,
+      result
+    ) {
+      if (err) {
+        return res.status(400).json({
+          success: false,
+          error: err,
+        });
+      }
+      if (result.length !== 0) {
+        console.log(result);
+        return res.render("pages/film_list", {
+          film_list: result,
+        });
+      }
+      res.render("pages/film_list", {
+        film_list: [],
+      });
+    });
+  }
 };
 
 exports.film_list = function (req, res) {
