@@ -2,6 +2,7 @@ var express = require("express");
 var mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 var path = require("path");
+require("dotenv").config();
 
 var indexRouter = require("./routes/index");
 
@@ -9,8 +10,7 @@ var app = express();
 
 // database setup
 
-var mongoDB =
-  "mongodb+srv://floweruser:Xyz123Abc@cluster0.bdd9x.mongodb.net/flower?retryWrites=true&w=majority";
+var mongoDB = process.env.DB;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));

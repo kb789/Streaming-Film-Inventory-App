@@ -12,10 +12,10 @@
           <br />
           <h2><%= film.name %></h2>
           <br />
-          <p><%= film.director %></p>
-          <p><%= film.price %></p>
+          <p>Directed by <%= film.director %></p>
+          <p>$<%= film.price %></p>
           <p><%= film.availability %></p>
-          <p><%= category %></p>
+          <p>Genre: <%= category %></p>
           <br />
           <div class="row">
             <div class="col-lg-4">
@@ -24,7 +24,12 @@
                   type="submit"
                   class="button btn-block"
                   value="Edit"
-                  style="background: #edc831; color: #c62835"
+                  style="
+                    background: #edc831;
+                    color: #fff;
+                    font-weight: bold;
+                    border: none;
+                  "
                 />
               </form>
             </div>
@@ -34,7 +39,12 @@
                   name="delete"
                   value="delete"
                   class="button btn-block"
-                  style="background: #edc831; color: #c62835"
+                  style="
+                    background: #edc831;
+                    color: #fff;
+                    border: none;
+                    font-weight: bold;
+                  "
                 >
                   Delete
                 </button>
