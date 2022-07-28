@@ -1,20 +1,35 @@
-const async = require("async");
-const formidable = require("formidable");
-const path = require("path");
-var fs = require("fs");
-const mongoose = require("mongoose");
-var ObjectId = require("mongodb").ObjectID;
+const async = require('async');
+const formidable = require('formidable');
+const path = require('path');
+var fs = require('fs');
+const mongoose = require('mongoose');
+var ObjectId = require('mongodb').ObjectID;
 
-const Category = require("../models/category");
-var Film = require("../models/film");
-const { fieldValidator } = require("../utils/index");
+const Category = require('../models/category');
+var Film = require('../models/film');
+const { fieldValidator } = require('../utils/index');
+
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+  cloud_name: process.env.CN,
+  api_key: process.env.APIKEY,
+  api_secret: process.env.APISECRET,
+});
+
+const uploadImage = async (imagePath) => {
+  try {
+    const result = await cloudinary.uploader.upload(imagePath);
+
+    return result.url;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 exports.index = function (req, res) {
   Film.count().exec(function (err, count) {
-    // Get a random entry
     var random = Math.floor(Math.random() * count);
-
-    // Again query all users but only fetch one offset by our random #
     Film.findOne()
       .skip(random)
       .exec(function (err, result) {
@@ -25,7 +40,7 @@ exports.index = function (req, res) {
           });
         }
 
-        res.render("pages/index", { result: result });
+        res.render('pages/index', { result: result });
       });
   });
 };
@@ -46,8 +61,8 @@ exports.createForm = function (req, res) {
         });
       }
 
-      res.render("pages/filmForm", {
-        title: "Film Inventory",
+      res.render('pages/filmForm', {
+        title: 'Film Inventory',
         categories: results.categories,
       });
     }
@@ -62,8 +77,8 @@ exports.create = (req, res) => {
   form.parse(req, async (err, fields, files) => {
     if (err) {
       return res.status(400).json({
-        status: "Fail",
-        message: "There was an error parsing the files",
+        status: 'Fail',
+        message: 'There was an error parsing the files',
         error: err,
       });
     }
@@ -71,42 +86,30 @@ exports.create = (req, res) => {
     if (fieldValidator(fields)) {
       return res.status(400).json(fieldValidator(fields));
     }
-    // check if file is null
+
     const file = await files.myFile;
 
     if (file.size === 0) {
       return res.status(400).json({
         success: false,
-        message: "no file uploaded",
+        message: 'no file uploaded',
       });
     }
 
     if (
-      file.mimetype !== "image/jpeg" &&
-      file.mimetype !== "image/gif" &&
-      file.mimetype !== "image/png"
+      file.mimetype !== 'image/jpeg' &&
+      file.mimetype !== 'image/gif' &&
+      file.mimetype !== 'image/png'
     ) {
       return res.status(400).json({
         success: false,
-        message: "Invalid file type. Please upload a jpeg, gif or png file",
+        message: 'Invalid file type. Please upload a jpeg, gif or png file',
       });
     }
 
-    var fileNameFinal =
-      new Date().getTime().toString() + "-" + file.originalFilename;
     var oldPath = file._writeStream.path;
-    var newPath = "./public/files" + "/" + fileNameFinal;
-    var rawData = fs.readFileSync(oldPath);
 
-    fs.writeFile(newPath, rawData, function (err) {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          error: err,
-        });
-      }
-    });
-    const fullpath = `files/${fileNameFinal}`;
+    const fullpath = await uploadImage(oldPath);
 
     var film = new Film({
       name: name,
@@ -125,7 +128,7 @@ exports.create = (req, res) => {
             error: err,
           });
         }
-        Film.find({}, "name director availability")
+        Film.find({}, 'name director availability')
           .sort({ name: 1 })
           .exec(function (err, list_films) {
             if (err) {
@@ -134,8 +137,8 @@ exports.create = (req, res) => {
                 error: err,
               });
             }
-            //Successful, so render
-            res.render("pages/film_list", {
+
+            res.render('pages/film_list', {
               film_list: list_films,
             });
           });
@@ -145,11 +148,6 @@ exports.create = (req, res) => {
         error,
       });
     }
-
-    //res.render("pages/film_detail", {
-    //  film: docs,
-    //  categories: results.categories,
-    //});
   });
 };
 
@@ -169,11 +167,11 @@ exports.filmDetail = function (req, res) {
         });
       }
 
-      res.render("pages/film_detail", {
+      res.render('pages/film_detail', {
         film: docs[0],
 
         category: cats[0].name,
-        image: "/" + docs[0].image,
+        image: docs[0].image,
       });
     });
   });
@@ -191,11 +189,11 @@ exports.filmEditForm = function (req, res) {
         });
       }
 
-      res.render("pages/filmFormEdit", {
+      res.render('pages/filmFormEdit', {
         film: docs[0],
         categories: cats,
 
-        image: "/" + docs[0].image,
+        image: '/' + docs[0].image,
       });
     });
   });
@@ -208,8 +206,8 @@ exports.editForm = (req, res) => {
   form.parse(req, async (err, fields, files) => {
     if (err) {
       return res.status(400).json({
-        status: "Fail",
-        message: "There was an error parsing the files",
+        status: 'Fail',
+        message: 'There was an error parsing the files',
         error: err,
       });
     }
@@ -217,36 +215,24 @@ exports.editForm = (req, res) => {
     if (fieldValidator(fields)) {
       return res.status(400).json(fieldValidator(fields));
     }
-    // check if file is null
+
     const file = await files.myFile;
 
     if (file.size !== 0) {
       if (
-        file.mimetype !== "image/jpeg" &&
-        file.mimetype !== "image/gif" &&
-        file.mimetype !== "image/png"
+        file.mimetype !== 'image/jpeg' &&
+        file.mimetype !== 'image/gif' &&
+        file.mimetype !== 'image/png'
       ) {
         return res.status(400).json({
           success: false,
-          message: "Invalid file type. Please upload a jpeg, gif or png file",
+          message: 'Invalid file type. Please upload a jpeg, gif or png file',
         });
       }
 
-      var fileNameFinal =
-        new Date().getTime().toString() + "-" + file.originalFilename;
       var oldPath = file._writeStream.path;
-      var newPath = "./public/files" + "/" + fileNameFinal;
-      var rawData = fs.readFileSync(oldPath);
+      const fullpath = await uploadImage(oldPath);
 
-      fs.writeFile(newPath, rawData, function (err) {
-        if (err) {
-          return res.status(400).json({
-            success: false,
-            error: err,
-          });
-        }
-      });
-      fullpath = `files/${fileNameFinal}`;
       update = {
         name: name,
         director: director,
@@ -266,7 +252,6 @@ exports.editForm = (req, res) => {
     }
 
     const filter = {
-      // _id: mongoose.Types.ObjectId(film_id),
       _id: film_id,
     };
 
@@ -275,7 +260,7 @@ exports.editForm = (req, res) => {
         return err;
       }
     });
-    res.redirect("/film/" + film_id);
+    res.redirect('/film/' + film_id);
   });
 };
 
@@ -287,7 +272,7 @@ exports.delete_film = function (req, res) {
         error: err,
       });
     }
-    return res.redirect("/films");
+    return res.redirect('/films');
   });
 };
 
@@ -303,7 +288,7 @@ exports.filmCategory = function (req, res) {
       });
     }
 
-    res.render("pages/catfilm", {
+    res.render('pages/catfilm', {
       cat_films: cat_films,
     });
   });
@@ -312,10 +297,7 @@ exports.filmCategory = function (req, res) {
 // GET request for list of all film items.
 
 exports.searchFilms = function (req, res) {
-  // break down req.body.term into array, search each word, skip a, and, the,  weight by most results?
-  //keyword search with mongoose
-
-  Film.find({ name: { $regex: req.body.term, $options: "i" } }).exec(function (
+  Film.find({ name: { $regex: req.body.term, $options: 'i' } }).exec(function (
     err,
     result
   ) {
@@ -326,15 +308,14 @@ exports.searchFilms = function (req, res) {
       });
     }
     if (result.length !== 0) {
-      console.log(result);
-      return res.render("pages/film_list", {
+      return res.render('pages/film_list', {
         film_list: result,
       });
     }
   });
-  let term_arr = req.body.term.split(" ");
+  let term_arr = req.body.term.split(' ');
   for (let i = 0; i < term_arr.length; i++) {
-    Film.find({ name: { $regex: term_arr[i], $options: "i" } }).exec(function (
+    Film.find({ name: { $regex: term_arr[i], $options: 'i' } }).exec(function (
       err,
       result
     ) {
@@ -345,12 +326,11 @@ exports.searchFilms = function (req, res) {
         });
       }
       if (result.length !== 0) {
-        console.log(result);
-        return res.render("pages/film_list", {
+        return res.render('pages/film_list', {
           film_list: result,
         });
       }
-      res.render("pages/film_list", {
+      res.render('pages/film_list', {
         film_list: [],
       });
     });
@@ -358,7 +338,7 @@ exports.searchFilms = function (req, res) {
 };
 
 exports.film_list = function (req, res) {
-  Film.find({}, "name director availability")
+  Film.find({}, 'name director availability')
     .sort({ name: 1 })
     .exec(function (err, list_films) {
       if (err) {
@@ -367,8 +347,8 @@ exports.film_list = function (req, res) {
           error: err,
         });
       }
-      //Successful, so render
-      res.render("pages/film_list", {
+
+      res.render('pages/film_list', {
         film_list: list_films,
       });
     });

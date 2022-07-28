@@ -1,10 +1,10 @@
-const formidable = require("formidable");
-const Category = require("../models/category");
+const formidable = require('formidable');
+const Category = require('../models/category');
 
-const { body, validationResult } = require("express-validator");
+const { body, validationResult } = require('express-validator');
 
 exports.createForm = function (req, res) {
-  res.render("pages/form");
+  res.render('pages/form');
 };
 
 exports.category_create = function (req, res) {
@@ -19,15 +19,15 @@ exports.category_create = function (req, res) {
         error: err,
       });
     }
-    // Category saved. Redirect to home page.
-    res.redirect("/category/" + category._id);
+
+    res.redirect('/category/' + category._id);
   });
 };
 
 // Get film detail  page
 exports.categoryDetail = function (req, res) {
   Category.find({ _id: req.params.id })
-    .sort("name")
+    .sort('name')
     .exec(function (err, docs) {
       if (err) {
         return res.status(400).json({
@@ -36,8 +36,7 @@ exports.categoryDetail = function (req, res) {
         });
       }
 
-      //Successful, so render
-      res.render("pages/category_detail", {
+      res.render('pages/category_detail', {
         name: docs[0].name,
         desc: docs[0].description,
         id: docs[0]._id,
@@ -48,7 +47,7 @@ exports.categoryDetail = function (req, res) {
 // GET request for list of all category items.
 
 exports.category_list = function (req, res, next) {
-  Category.find({}, "name description")
+  Category.find({}, 'name description')
     .sort({ name: 1 })
     .exec(function (err, list_categories) {
       if (err) {
@@ -57,8 +56,8 @@ exports.category_list = function (req, res, next) {
           error: err,
         });
       }
-      //Successful, so render
-      res.render("pages/category_list", {
+
+      res.render('pages/category_list', {
         category_list: list_categories,
       });
     });
