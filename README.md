@@ -10,14 +10,11 @@ https://film-inventory.onrender.com/
 
 This Members Only Message Board App was built as a part of the Odin Project: https://www.theodinproject.com/lessons/nodejs-inventory-application
 
-Users can create an account and login to post messages. To gain access to the club and see who posted the messages, they have to answer a trivia question correctly in order to get the secret password. They can answer a more difficult trivia question in order to gain the admin password and the ability to delete messages.  
+This application allows users to create, read, update and delete streaming films, including the title, director, availability, and price. Film genres and their descriptions can be added, and applied to the films. Film image art can be uploaded. Films can be viewed in an alphabetical list, viewed by genre, or searched by title.
 
 ## Technologies Used
 
-The technologies used are Express/Node, EJS, Passport.js for authentication, and a MongoDB database. Tailwind was used for styling.
+The technologies used are Express/Node, EJS, Cloudinary for image hosting, and a MongoDB database. Bootstrap was used for styling.
 
 
-## APIs Used
-
-The [Open Trivia database](https://opentdb.com/) API was used as the source for the trivia questions and answers. 
 
