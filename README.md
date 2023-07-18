@@ -8,7 +8,7 @@ https://film-inventory.onrender.com/
 
 ## Description
 
-This Members Only Message Board App was built as a part of the Odin Project: https://www.theodinproject.com/lessons/nodejs-inventory-application
+This Streaming Film Inventory App was built as a part of the Odin Project: https://www.theodinproject.com/lessons/nodejs-inventory-application
 
 This application allows users to create, read, update and delete streaming films, including the title, director, availability, and price. Film genres and their descriptions can be added, and applied to the films. Film image art can be uploaded. Films can be viewed in an alphabetical list, viewed by genre, or searched by title.
 
